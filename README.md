@@ -17,7 +17,12 @@ This is the official implementation of [CGA-Net: Category Guided Aggregation for
 
 ## Usage
 
-This module is general and can be leveraged in any existing point-based segmentation networks.
+This module can be leveraged in any existing point-based segmentation networks. Here we provide an example of how to apply CGA module to CloserLook3D, which can be run as follows:
+
+`cd examples/CloserLook3D`
+`sh train_s3dis.sh`
+
+For other backbones, one can try to modify the source code in [CGA/cga.py](https://github.com/MCG-NJU/CGA-Net/blob/main/CGA/cga.py). 
 
 ## Main Results
 
