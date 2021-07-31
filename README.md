@@ -21,8 +21,6 @@ This module can be leveraged in any existing point-based segmentation networks. 
 
 For other backbones, one can try to modify the source code in [CGA/cga.py](https://github.com/MCG-NJU/CGA-Net/blob/main/CGA/cga.py). 
 
-## Main Results
-
 
 ## Acknowledgement
 
