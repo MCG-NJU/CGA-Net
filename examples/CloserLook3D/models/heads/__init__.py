@@ -1,0 +1,1 @@
+from .seg_head import resnet_scene_segmentation_head
