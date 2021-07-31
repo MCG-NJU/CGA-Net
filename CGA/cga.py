@@ -61,6 +61,7 @@ def cga(xyz,
         bn=True,
         bn_momentum=0.98,
         bn_eps=1e-3):
+    
     """category guided aggregation module.
         Args:
             xyz: point position, Nx3, float32
@@ -74,7 +75,7 @@ def cga(xyz,
             bn: If True, add batch norm after convolution
         Returns:
             aggregated features [N, C], binary logits [N, n_neighbors, 2]
-        """
+    """
     with tf.variable_scope('cga') as sc:
         N = xyz.get_shape()[0].value
         input_dim = features.get_shape()[-1].value
@@ -100,9 +101,7 @@ def cga(xyz,
         intra_neighbor = binary_soft[:, :, 1:]
         inter_neighbor = binary_soft[:, :, :1]
 
-        '''
-        SAM module
-        '''
+        #########SAM module#########
         with tf.variable_scope('sam') as sc:
             # intra_similarity = tf.div_no_nan( # Nxn_neighborsxC
             #     tf.reduce_sum(tf.multiply(features, neighbor_features), axis=-1, keep_dims=True),
@@ -120,9 +119,8 @@ def cga(xyz,
                                         bn_momentum=bn_momentum,
                                         bn_eps=bn_eps)
 
-        '''
-        DRM module
-        '''
+        
+        ########DRM module########
         with tf.variable_scope('drm') as sc:
             concat_features_diff = tf.concat([center_features - neighbor_features, diff_xyz], axis=-1)
             concat_features_diff = tf.reshape(concat_features_diff, [N*n_neighbors, input_dim+3])
@@ -140,9 +138,9 @@ def cga(xyz,
                                         weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
                                         bn_momentum=bn_momentum,
                                         bn_eps=bn_eps)
-        '''
-        fusion
-        '''
+        
+        ########fusion##########
+        
         with tf.variable_scope('fusion') as sc:
             fused_features = tf.concat([features, intra_features, inter_features], axis=-1)
             fused_features = conv1d_1x1(fused_features, fdim, 'fusion_feature', is_training=is_training,
@@ -151,20 +149,18 @@ def cga(xyz,
                                             weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
                                             bn_momentum=bn_momentum,
                                             bn_eps=bn_eps)
-
-        # logits_cga = conv1d_1x1(fused_features, num_classes, 'segmentation_pred_cga',
-        #                                is_training=is_training, with_bias=True,
-        #                                init=init, weight_decay=weight_decay, activation_fn=None, bn=False)
+            
     return fused_features, binary
 
 
 def get_binary_loss(neighbors_idx, labels, pred_binary):
-    '''
-    :param neighbors_idx: Nxn_neighbors
-    :param labels: N
-    :return:
-    binary loss, float32
-    '''
+    """
+    Args:
+      :param neighbors_idx: Nxn_neighbors
+      :param labels: N
+    Return:
+      binary loss, float32
+    """
     n_neighbors = tf.shape(neighbors_idx)[-1]
     center_labels = labels
     shadow_labels = tf.concat([center_labels, tf.zeros_like(center_labels[:1])], axis=0)
