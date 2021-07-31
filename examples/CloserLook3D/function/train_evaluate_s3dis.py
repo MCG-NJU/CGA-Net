@@ -152,7 +152,7 @@ def training(config):
                     model.get_coarse_seg_loss()
                     model.get_cga_seg_loss()
                     model.get_binary_loss()
-                    losses_coarse = tf.get_collection('losses_coarse', scope)
+                    losses_coarse = tf.get_collection('losses', scope)
                     losses_cga = tf.get_collection('losses_cga', scope)
                     losses_binary = tf.get_collection('losses_binary', scope)
                     weight_losses = tf.get_collection('weight_losses', scope)
