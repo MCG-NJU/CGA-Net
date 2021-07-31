@@ -17,10 +17,7 @@ This is the official implementation of [CGA-Net: Category Guided Aggregation for
 
 ## Usage
 
-This module can be leveraged in any existing point-based segmentation networks. Here we provide an example of how to apply CGA module to CloserLook3D, which can be run as follows:
-
-`cd examples/CloserLook3D`
-`sh train_s3dis.sh`
+This module can be leveraged in any existing point-based segmentation networks. Here we provide an example of how to apply CGA module to CloserLook3D, please refer to [examples/CloserLook3D/README.md](https://github.com/MCG-NJU/CGA-Net/blob/main/examples/CloserLook3D/README.md).
 
 For other backbones, one can try to modify the source code in [CGA/cga.py](https://github.com/MCG-NJU/CGA-Net/blob/main/CGA/cga.py). 
 
@@ -29,4 +26,4 @@ For other backbones, one can try to modify the source code in [CGA/cga.py](https
 
 ## Acknowledgement
 
-Our Tensorflow code is based on [CloserLook3D](), [RandLA-Net](), [MeteorNet]() and we benefit a lot from [PointNet++](), [KPConv]().
+Our Tensorflow code is based on [CloserLook3D](https://github.com/zeliu98/CloserLook3D), [RandLA-Net](https://github.com/QingyongHu/RandLA-Net), [MeteorNet](https://github.com/xingyul/meteornet) and we benefit a lot from [PointNet2](https://github.com/charlesq34/pointnet2), [KPConv](https://github.com/HuguesTHOMAS/KPConv).
