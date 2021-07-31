@@ -199,7 +199,7 @@ def training(config):
 
         # Add ops to save and restore all the variables.
         save_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='SceneSegModel')
-        saver = tf.train.Saver(save_vars)
+        saver = tf.train.Saver(save_vars, max_to_keep=30)
 
         # Create a session
         tfconfig = tf.ConfigProto()
