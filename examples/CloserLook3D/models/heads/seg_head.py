@@ -201,7 +201,7 @@ def cga(xyz,
         '''
         with tf.variable_scope('fusion') as sc:
             fused_features = tf.concat([features, intra_features, inter_features], axis=-1)
-            fused_features = conv1d_1x1(fused_features, fdim, 'fusion_feature', is_training=is_training,
+            fused_features = conv1d_1x1(fused_features, 2*fdim, 'fusion_feature', is_training=is_training,
                                             with_bias=False,
                                             init=init,
                                             weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
