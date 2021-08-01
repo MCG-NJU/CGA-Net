@@ -430,7 +430,7 @@ def val_one_epoch(sess, ops, dataset, validation_probs, val_proportions, epoch):
         try:
             loss_coarse, loss_cga, loss_binary, \
             tower_probs, tower_labels, tower_in_batches, tower_point_inds, tower_cloud_inds = sess.run(
-                [ops['loss_coarse'],
+                [ops['loss'],
                  ops['loss_cga'],
                  ops['loss_binary'],
                  ops['tower_probs'],
