@@ -93,7 +93,7 @@ def resnet_scene_segmentation_head(config,
         features_cga, pred_binary = cga(xyz=inputs['points'][0],
                                         neighbor_idx=inputs['neighbors'][0][:, ::config.neighbor_step],
                                         features=features,
-                                        fdim=32,
+                                        fdim=fdim,
                                         is_training=is_training,
                                         init=init,
                                         weight_decay=weight_decay,
@@ -170,7 +170,7 @@ def cga(xyz,
             intra_features = tf.div_no_nan(tf.reduce_sum(intra_features, axis=-2), tf.reduce_sum(intra_neighbor, axis=-2))
 
             intra_features = tf.concat([intra_features, features], axis=-1)
-            intra_features = conv1d_1x1(intra_features, fdim, 'intra_fc', is_training=is_training, with_bias=False,
+            intra_features = conv1d_1x1(intra_features, 32, 'intra_fc', is_training=is_training, with_bias=False,
                                         init=init,
                                         weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
                                         bn_momentum=bn_momentum,
@@ -182,16 +182,16 @@ def cga(xyz,
         with tf.variable_scope('drm') as sc:
             concat_features_diff = tf.concat([center_features - neighbor_features, xyz_neighbor_diff], axis=-1)
             concat_features_diff = tf.reshape(concat_features_diff, [N*n_neighbors, input_dim+3])
-            relation = conv1d_1x1(concat_features_diff, fdim, 'inter_rel', is_training=is_training, with_bias=False, init=init,
+            relation = conv1d_1x1(concat_features_diff, 32, 'inter_rel', is_training=is_training, with_bias=False, init=init,
                               weight_decay=weight_decay, activation_fn=activation_fn, bn=bn, bn_momentum=bn_momentum,
                               bn_eps=bn_eps)
 
-            relation = tf.reshape(relation, [N, n_neighbors, fdim])
+            relation = tf.reshape(relation, [N, n_neighbors, 32])
             inter_features = tf.multiply(inter_neighbor, relation)
             inter_features = tf.div_no_nan(tf.reduce_sum(inter_features, axis=-2),
                                            tf.reduce_sum(inter_neighbor, axis=-2) + 1e-10)
             inter_features = tf.concat([inter_features, features], axis=-1)
-            inter_features = conv1d_1x1(inter_features, fdim, 'inter_fc', is_training=is_training, with_bias=False,
+            inter_features = conv1d_1x1(inter_features, 32, 'inter_fc', is_training=is_training, with_bias=False,
                                         init=init,
                                         weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
                                         bn_momentum=bn_momentum,
@@ -201,7 +201,7 @@ def cga(xyz,
         '''
         with tf.variable_scope('fusion') as sc:
             fused_features = tf.concat([features, intra_features, inter_features], axis=-1)
-            fused_features = conv1d_1x1(fused_features, 2*fdim, 'fusion_feature', is_training=is_training,
+            fused_features = conv1d_1x1(fused_features, fdim, 'fusion_feature', is_training=is_training,
                                             with_bias=False,
                                             init=init,
                                             weight_decay=weight_decay, activation_fn=activation_fn, bn=bn,
