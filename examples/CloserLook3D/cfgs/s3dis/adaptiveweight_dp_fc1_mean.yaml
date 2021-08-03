@@ -1,4 +1,4 @@
-max_epoch: 700
+max_epoch: 800
 batch_size: 2
 base_learning_rate: 0.01
 optimizer: 'sgd'
