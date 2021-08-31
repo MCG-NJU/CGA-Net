@@ -97,7 +97,7 @@ def cga(xyz,
                         init=init, weight_decay=weight_decay, activation_fn=None, bn=False) # (N*n_neighbors)x2
 
         binary_soft = tf.nn.softmax(binary, axis=-1)
-        binary_soft = tf.reshape(binary_soft, [N, num_neighbors, 2])
+        binary_soft = tf.reshape(binary_soft, [N, n_neighbors, 2])
         intra_neighbor = binary_soft[:, :, 1:]
         inter_neighbor = binary_soft[:, :, :1]
 
@@ -128,7 +128,7 @@ def cga(xyz,
                               weight_decay=weight_decay, activation_fn=activation_fn, bn=bn, bn_momentum=bn_momentum,
                               bn_eps=bn_eps)
 
-            relation = tf.reshape(relation, [N, num_neighbors, fdim])
+            relation = tf.reshape(relation, [N, n_neighbors, fdim])
             inter_features = tf.multiply(inter_neighbor, relation)
             inter_features = tf.div_no_nan(tf.reduce_sum(inter_features, axis=-2),
                                            tf.reduce_sum(inter_neighbor, axis=-2) + 1e-10)
