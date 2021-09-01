@@ -122,7 +122,7 @@ def cga(xyz,
         
         ########DRM module########
         with tf.variable_scope('drm') as sc:
-            concat_features_diff = tf.concat([center_features - neighbor_features, diff_xyz], axis=-1)
+            concat_features_diff = tf.concat([center_features - neighbor_features, xyz_neighbor_diff], axis=-1)
             concat_features_diff = tf.reshape(concat_features_diff, [N*n_neighbors, input_dim+3])
             relation = conv1d_1x1(concat_features_diff, 32, 'inter_rel', is_training=is_training, with_bias=False, init=init,
                               weight_decay=weight_decay, activation_fn=activation_fn, bn=bn, bn_momentum=bn_momentum,
