@@ -416,10 +416,6 @@ def val_one_epoch(sess, ops, dataset, validation_probs, val_proportions, epoch):
     # Choose validation smoothing parameter (0 for no smothing, 0.99 for big smoothing)
     val_smooth = 0.95
 
-    loss_coarse_meter = AverageMeter()
-    loss_cga_meter = AverageMeter()
-    loss_binary_meter = AverageMeter()
-
     # Initialise iterator with train data
     sess.run(ops['val_init_op'])
 
@@ -428,21 +424,14 @@ def val_one_epoch(sess, ops, dataset, validation_probs, val_proportions, epoch):
     targets = []
     while True:
         try:
-            loss_coarse, loss_cga, loss_binary, \
             tower_probs, tower_labels, tower_in_batches, tower_point_inds, tower_cloud_inds = sess.run(
-                [ops['loss'],
-                 ops['loss_cga'],
-                 ops['loss_binary'],
-                 ops['tower_probs'],
+                [ops['tower_probs'],
                  ops['tower_labels'],
                  ops['tower_in_batches'],
                  ops['tower_point_inds'],
                  ops['tower_cloud_inds']],
                 feed_dict=feed_dict)
 
-            loss_coarse_meter.update(loss_coarse)
-            loss_cga_meter.update(loss_cga)
-            loss_binary_meter.update(loss_binary)
 
             # Stack all validation predictions for each class separately
             for stacked_probs, labels, batches, point_inds, cloud_inds in zip(tower_probs, tower_labels,
@@ -461,11 +450,6 @@ def val_one_epoch(sess, ops, dataset, validation_probs, val_proportions, epoch):
                     # Stack all prediction for this epoch
                     predictions += [probs]
                     targets += [dataset.input_labels['validation'][c_i][inds]]
-            if (idx + 1) % config.print_freq == 0:
-                logger.info(f'Val: [{epoch}][{idx}] '
-                            f'loss coarse {loss_coarse_meter.val:.3f} ({loss_coarse_meter.avg:.3f}) '
-                            f'loss cga {loss_cga_meter.val:.3f} ({loss_cga_meter.avg:.3f}) '
-                            f'loss binary {loss_binary_meter.val:.3f} ({loss_binary_meter.avg:.3f})')
             idx += 1
         except tf.errors.OutOfRangeError:
             break
